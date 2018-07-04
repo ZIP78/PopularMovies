@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
     private movieAdapter moviesAdapter;
     private List<Movie_Items> listItems ;
     private RequestQueue mRequestQueue;
-    private   String URL = "https://api.themoviedb.org/3/movie/popular?api_key=e085738f027ededcaabc5b61382906ab";
+    private String URL = "https://api.themoviedb.org/3/movie/popular?api_key=e085738f027ededcaabc5b61382906ab";
 
-    private   String URL2 = "https://api.themoviedb.org/3/movie/top_rated?api_key=e085738f027ededcaabc5b61382906ab";
+    private String URL2 = "https://api.themoviedb.org/3/movie/top_rated?api_key=e085738f027ededcaabc5b61382906ab";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,12 +115,11 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.popular:
-                //refresh
                 loadData(URL);
                 return true;
 
             case R.id.top_rated:
-                //refresh
+                loadData(URL2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
