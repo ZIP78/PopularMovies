@@ -15,7 +15,7 @@ import java.util.List;
 
 public class movieAdapter extends RecyclerView.Adapter<movieAdapter.Viewholder> {
 
-  private   List<Movie_Items> listItems ;
+  private   ArrayList<Movie_Items> listItems ;
   private Context context;
   private OnItemClickListener mListener;
 
@@ -28,7 +28,7 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.Viewholder> 
       mListener = listener;
   }
 
-    public movieAdapter(Context context, List<Movie_Items> listItems) {
+    public movieAdapter(Context context, ArrayList<Movie_Items> listItems) {
         this.listItems = listItems;
         this.context = context;
     }
@@ -52,7 +52,17 @@ public class movieAdapter extends RecyclerView.Adapter<movieAdapter.Viewholder> 
 
     @Override
     public int getItemCount() {
-        return listItems.size();
+      if (listItems == null) {
+          return 0;
+      } else {
+          return listItems.size();
+      }
+    }
+    public void setMovieData (ArrayList<Movie_Items> movieData) {
+      if (movieData != null)
+          listItems = new ArrayList<>(movieData);
+      notifyDataSetChanged();
+
     }
 
     public class Viewholder extends RecyclerView.ViewHolder {

@@ -2,6 +2,7 @@ package com.example.paulkim.popularmovies;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,10 +31,8 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
 
     private RecyclerView recyclerView;
     private movieAdapter moviesAdapter;
-    private List<Movie_Items> listItems ;
-    private RequestQueue mRequestQueue;
+    private ArrayList<Movie_Items> listItems ;
     private String URL = "https://api.themoviedb.org/3/movie/popular?api_key=e085738f027ededcaabc5b61382906ab";
-
     private String URL2 = "https://api.themoviedb.org/3/movie/top_rated?api_key=e085738f027ededcaabc5b61382906ab";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,58 +43,14 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        listItems = new ArrayList<>();
-        mRequestQueue = Volley.newRequestQueue(this);
         moviesAdapter = new movieAdapter(getApplicationContext(), listItems);
         recyclerView.setAdapter(moviesAdapter);
         moviesAdapter.setOnItemClickListener(MainActivity.this);
 
-        loadData(URL2);
+        new requestingMovieData().execute(URL);
 
 
     }
-
-    private void loadData(String request) {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading Data");
-        progressDialog.show();
-
-
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, request, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                progressDialog.dismiss();
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray moviesArray = jsonObject.getJSONArray("results");
-                    for (int i = 0; i<moviesArray.length(); i++) {
-                        JSONObject resultObject = moviesArray.getJSONObject(i);
-                        Movie_Items items = new Movie_Items(resultObject.getString("poster_path"),
-                                resultObject.getString("title"),
-                                resultObject.getString("release_date"),
-                                resultObject.getString("vote_average"),
-                                resultObject.getString("overview"));
-                        listItems.add(items);
-
-                    }
-                    moviesAdapter.notifyDataSetChanged();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                });
-        mRequestQueue.add(stringRequest);
-    }
-
-
 
     @Override
     public void onItemClick(int position) {
@@ -115,14 +70,45 @@ public class MainActivity extends AppCompatActivity implements movieAdapter.OnIt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.popular:
-                loadData(URL);
+                new requestingMovieData().execute(URL);
+
                 return true;
 
             case R.id.top_rated:
-                loadData(URL2);
+                new requestingMovieData().execute(URL2);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //get http response and parsed data from MovieDataParsing
+    private class requestingMovieData extends AsyncTask<String, Void, ArrayList<Movie_Items>> {
+
+        @Override
+        protected ArrayList<Movie_Items> doInBackground(String... movieData) {
+
+          if (movieData != null) {
+              String movieResult = NetworkUtilis.getJSONResponseFromUrl(movieData[0]);
+              if (movieResult != null) {
+                  try {
+                      listItems = MovieDataParsing.getParsedMovieData(movieResult);
+                      return listItems;
+                  } catch (JSONException e) {
+                      e.printStackTrace();
+                  }
+              }
+          }
+            return listItems;
+        }
+
+        //set the data to the adapter
+        @Override
+        protected void onPostExecute(ArrayList<Movie_Items> movie_items_results) {
+            if (movie_items_results != null) {
+                moviesAdapter.setMovieData(movie_items_results);
+            }
         }
     }
 }
