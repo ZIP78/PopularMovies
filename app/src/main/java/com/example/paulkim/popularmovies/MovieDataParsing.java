@@ -1,10 +1,10 @@
 package com.example.paulkim.popularmovies;
 
-        import org.json.JSONArray;
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class MovieDataParsing {
     public static ArrayList<Movie_Items> getParsedMovieData(String jsonMovieData) throws JSONException {

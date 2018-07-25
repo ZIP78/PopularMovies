@@ -11,10 +11,9 @@ import com.squareup.picasso.Picasso;
 
 public class detail_movies extends AppCompatActivity {
 
-    Movie_Items movies;
-
     public ImageView mImageView;
     public TextView mTitleLabel;
+    Movie_Items movies;
     private TextView mTitleText;
     private TextView mReleaseLabel;
     private TextView mReleaseText;
@@ -45,10 +44,10 @@ public class detail_movies extends AppCompatActivity {
 
         movies = intent.getParcelableExtra("Movie Item");
 
-        String image = "http://image.tmdb.org/t/p/w185/"+ movies.getMovieThumbnailPoster();
+        String image = "http://image.tmdb.org/t/p/w185/" + movies.getMovieThumbnailPoster();
         String title = movies.getMovieTitle();
         String releaseDate = movies.getReleaseDate();
-       String vote = movies.getVote_Avg();
+        String vote = movies.getVote_Avg();
         String plot = movies.getmPlot();
 
         Picasso.with(this)
@@ -56,8 +55,8 @@ public class detail_movies extends AppCompatActivity {
                 .into(mImageView);
 
         mTitleText.setText(title);
-      mReleaseText.setText(releaseDate);
-       mVoteAverageText.setText(vote);
+        mReleaseText.setText(releaseDate);
+        mVoteAverageText.setText(vote);
         mPlotText.setText(plot);
     }
 

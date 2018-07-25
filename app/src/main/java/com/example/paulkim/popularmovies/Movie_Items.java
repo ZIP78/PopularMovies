@@ -5,14 +5,22 @@ import android.os.Parcelable;
 
 public class Movie_Items implements Parcelable {
 
+    public static final Creator<Movie_Items> CREATOR = new Creator<Movie_Items>() {
+        @Override
+        public Movie_Items createFromParcel(Parcel in) {
+            return new Movie_Items(in);
+        }
+
+        @Override
+        public Movie_Items[] newArray(int size) {
+            return new Movie_Items[size];
+        }
+    };
     private String movieThumbnailPoster;
     private String movieTitle;
     private String releaseDate;
     private String vote_Avg;
     private String mPlot;
-
-
-
 
     public Movie_Items(String movieThumbnail, String title, String date, String vote, String plot) {
         movieThumbnailPoster = movieThumbnail;
@@ -29,18 +37,6 @@ public class Movie_Items implements Parcelable {
         vote_Avg = in.readString();
         mPlot = in.readString();
     }
-
-    public static final Creator<Movie_Items> CREATOR = new Creator<Movie_Items>() {
-        @Override
-        public Movie_Items createFromParcel(Parcel in) {
-            return new Movie_Items(in);
-        }
-
-        @Override
-        public Movie_Items[] newArray(int size) {
-            return new Movie_Items[size];
-        }
-    };
 
     public String getMovieThumbnailPoster() {
         return movieThumbnailPoster;
